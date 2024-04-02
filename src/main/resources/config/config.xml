@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+        <typeAlias type="com.example.naram.domain.dto.NoticeDto" alias="noticeDto"/>
+        <typeAlias type="com.example.naram.domain.dto.NoticeFileDto" alias="noticeFileDto"/>
+        <typeAlias type="com.example.naram.domain.dto.PromotionDto" alias="promotionDto"/>
+        <typeAlias type="com.example.naram.domain.dto.PromotionFileDto" alias="promotionFileDto"/>
+        <typeAlias type="com.example.naram.domain.dto.QnaDto" alias="qnaDto"/>
+        <typeAlias type="com.example.naram.domain.dto.QnaFileDto" alias="qnaFileDto"/>
+        <typeAlias type="com.example.naram.domain.dto.QnaCommentDto" alias="qnaCommentDto"/>
+        <typeAlias type="com.example.naram.domain.dto.UserDto" alias="userDto"/>
+        <typeAlias type="com.example.naram.domain.dto.UserAddDto" alias="userAddDto"/>
+    </typeAliases>
+</configuration>
