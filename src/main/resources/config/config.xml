@@ -17,5 +17,6 @@
 
 <!--     vo   -->
         <typeAlias type="com.example.naram.domain.vo.UserLoginVo" alias="userLoginVo"/>
+
     </typeAliases>
 </configuration>
