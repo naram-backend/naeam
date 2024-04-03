@@ -3,6 +3,8 @@
 
 <configuration>
     <typeAliases>
+
+<!--     dto     -->
         <typeAlias type="com.example.naram.domain.dto.NoticeDto" alias="noticeDto"/>
         <typeAlias type="com.example.naram.domain.dto.NoticeFileDto" alias="noticeFileDto"/>
         <typeAlias type="com.example.naram.domain.dto.PromotionDto" alias="promotionDto"/>
@@ -12,5 +14,8 @@
         <typeAlias type="com.example.naram.domain.dto.QnaCommentDto" alias="qnaCommentDto"/>
         <typeAlias type="com.example.naram.domain.dto.UserDto" alias="userDto"/>
         <typeAlias type="com.example.naram.domain.dto.UserAddDto" alias="userAddDto"/>
+
+<!--     vo   -->
+        <typeAlias type="com.example.naram.domain.vo.UserLoginVo" alias="userLoginVo"/>
     </typeAliases>
 </configuration>
