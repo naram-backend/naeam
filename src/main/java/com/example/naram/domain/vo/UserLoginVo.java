@@ -11,4 +11,5 @@ public class UserLoginVo {
     private Long userNumber;
     private String userId;
     private String userName;
+    private String userEmail;
 }

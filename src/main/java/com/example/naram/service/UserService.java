@@ -24,4 +24,20 @@ public class UserService {
         }
         return userDto;
     }
+
+//    아이디찾기
+    public String findId(String userEmail, String userName){
+        log.info("아이디찾기 mapper");
+        String userId = "";
+        userId=userMapper.findId(userEmail,userName);
+        log.info("찾은 아이디 userId={}",userId);
+
+        if(userId==null){
+            throw new IllegalArgumentException("아이디를 찾을수 없습니다.");
+        }
+        return userId;
+    }
+
+
+
 }
