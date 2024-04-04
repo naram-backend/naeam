@@ -8,5 +8,6 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {
     //로그인
     public UserDto login(@Param("userId")String userId, @Param("userPassword")String userPassword);
-
+    //아이디찾기
+    public String findId(@Param("userEmail")String userEmail, @Param("userName")String userName);
 }

@@ -6,5 +6,9 @@
         from users
         where user_id = #{userId} and user_password = #{userPassword}
     </select>
-
+    <select id="findId" resultType="String">
+        select user_id
+        from users
+        where user_email = #{userEmail} and user_name = #{userName}
+    </select>
 </mapper>
