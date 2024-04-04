@@ -6,6 +6,7 @@ import com.example.naram.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserController {
     private final UserService userService;
 
-    //  로그인 POST 매핑
+    //  로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDto rq){
         UserDto userDto=null;
@@ -39,6 +40,7 @@ public class UserController {
             userLoginVo.setUserNumber(userDto.getUserNumber());
             userLoginVo.setUserId(userDto.getUserId());
             userLoginVo.setUserName(userDto.getUserName());
+            userLoginVo.setUserEmail(userDto.getUserEmail());
             log.info("로그인 정보 =====================  userLoginVo{}",userLoginVo);
             return ResponseEntity.ok(userLoginVo);
         } catch (Exception e) {
@@ -46,4 +48,30 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
         }
     }
+    
+//    아이디 찾기
+    @PostMapping("/findId")
+    public ResponseEntity<?> findId(@RequestBody UserDto rq){
+
+        String userEmail = rq.getUserEmail();
+        String userName = rq.getUserName();
+        log.info(userEmail);
+        log.info(userName);
+
+        try{
+            String userId = userService.findId(userEmail,userName);
+            log.info("아이디 찾기 성공 userId{}",userId);
+            return ResponseEntity.ok(userId);
+        }catch (Exception e){
+            log.info("아이디 찾기 실패 userId{}");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디를 찾을 수 없습니다.");
+        }
+
+    }
+
+//    비밀번호 찾기
+
+
+
+
 }
