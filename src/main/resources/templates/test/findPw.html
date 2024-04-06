@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+</head>
+<body>
+<h1>Password Reset</h1>
+<label for="userId">User ID:</label>
+<input type="text" id="userId" name="userId"><br>
+<label for="userName">User Name:</label>
+<input type="text" id="userName" name="userName"><br>
+<label for="userEmail">User Email:</label>
+<input type="email" id="userEmail" name="userEmail"><br>
+<button onclick="sendRequest()">Find Password</button>
+
+<!-- 여기에 인증번호 입력 input 추가 -->
+<div id="verificationCodeInput" style="display: none;">
+    <label for="verificationCode">Verification Code:</label>
+    <input type="text" id="verificationCode" name="verificationCode"><br>
+    <button onclick="verifyCode()">Verify Code</button>
+</div>
+<div>
+    <input type="password" id="newPasswordInput" name="newPassword" placeholder="New password" style="display: none;"><br>
+    <input type="password" id="confirmNewPasswordInput" name="confirmNewPassword" placeholder="Confirm new password" style="display: none;">
+</div>
+
+<script>
+    function sendRequest() {
+        var userId = document.getElementById("userId").value;
+        var userName = document.getElementById("userName").value;
+        var userEmail = document.getElementById("userEmail").value;
+
+        // API 요청
+        fetch('/user/findPw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: userId,
+                userName: userName,
+                userEmail: userEmail
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 성공적인 응답 처리
+                alert('Password reset email has been sent.');
+                // 서버에서 받은 userNumber 저장
+                localStorage.setItem('userNumber', data);
+                // 서버에서 받은 코드를 입력하는 input 요소를 표시
+                document.getElementById("verificationCodeInput").style.display = "block";
+            })
+            .catch(error => {
+                // 오류 처리
+                console.error('There was an error!', error);
+                alert('Failed to reset password. Please check your information and try again.');
+            });
+    }
+
+    function verifyCode() {
+        var verificationCode = document.getElementById("verificationCode").value; // 문자열 그대로 가져옴
+
+        // API 요청
+        fetch('/user/verifyCode', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                verificationCode: verificationCode
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 서버로부터 받은 응답 처리
+                if (data.valid) {
+                    alert('Verification successful!');
+                    // 인증 성공 시 추가 작업 수행
+                    document.getElementById('newPasswordInput').style.display = 'block';
+                    document.getElementById('confirmNewPasswordInput').style.display = 'block';
+                } else {
+                    alert('Invalid verification code. Please try again.');
+                }
+            })
+            .catch(error => {
+                // 오류 처리
+                console.error('There was an error!', error);
+                alert('Failed to verify code. Please try again.');
+            });
+    }
+
+    document.getElementById("newPasswordInput").addEventListener("blur", function() {
+        var userNumber = localStorage.getItem('userNumber');
+        var newPassword = document.getElementById("newPasswordInput").value;
+
+        // API 요청
+        fetch('/user/checkPw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userNumber: userNumber,
+                newPassword: newPassword
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.valid) {
+                    // 이미 사용 중인 비밀번호 메시지
+                    var messageElement = document.createElement('span');
+                    messageElement.textContent = '이미 사용 중인 비밀번호입니다.';
+                    messageElement.style.color = 'red';
+                    document.body.appendChild(messageElement);
+                } else {
+                    // 사용 가능한 비밀번호 메시지
+                    var messageElement = document.createElement('span');
+                    messageElement.textContent = '사용 가능한 비밀번호입니다.';
+                    messageElement.style.color = 'green';
+                    document.body.appendChild(messageElement);
+                }
+            })
+            .catch(error => {
+            });
+    });
+
+</script>
+</body>
+</html>
