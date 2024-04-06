@@ -27,7 +27,7 @@ public class UserService {
 
 //    아이디찾기
     public String findId(String userEmail, String userName){
-        log.info("아이디찾기 mapper");
+        log.info("아이디찾기 서비스 진입");
         String userId = "";
         userId=userMapper.findId(userEmail,userName);
         log.info("찾은 아이디 userId={}",userId);
@@ -38,6 +38,14 @@ public class UserService {
         return userId;
     }
 
-
+//     비밀번호 찾기
+    public UserDto findPw(String userId, String userEmail, String userName){
+        log.info("비밀번호 찾기 서비스 진입");
+        UserDto userDto = userMapper.findPw(userId,userEmail,userName);
+        if(userDto == null){
+            throw new IllegalArgumentException("올바른 계정정보를 입력해주세요");
+        }
+        return userDto;
+    }
 
 }
