@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @NoArgsConstructor
-public class VerifyCodeVo {
-    private String vefifyCode;
+public class VerificationVo {
+    private String verificationCode;
 }
