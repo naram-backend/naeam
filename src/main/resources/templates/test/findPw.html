@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+</head>
+<body>
+<h1>Password Reset</h1>
+<label for="userId">User ID:</label>
+<input type="text" id="userId" name="userId"><br>
+<label for="userName">User Name:</label>
+<input type="text" id="userName" name="userName"><br>
+<label for="userEmail">User Email:</label>
+<input type="email" id="userEmail" name="userEmail"><br>
+<button onclick="sendRequest()">Find Password</button>
+
+<script>
+    function sendRequest() {
+        var userId = document.getElementById("userId").value;
+        var userName = document.getElementById("userName").value;
+        var userEmail = document.getElementById("userEmail").value;
+
+        // API 요청
+        fetch('user/findPw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: userId,
+                userName: userName,
+                userEmail: userEmail
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 성공적인 응답 처리
+                alert('Password reset email has been sent.');
+                var codeFromServer = data; // 서버에서 받은 코드
+                var userEnteredCode = prompt('Please enter the code you received via email:');
+
+                // 사용자가 입력한 코드와 서버에서 받은 코드 비교
+                if (userEnteredCode == codeFromServer) {
+                    alert('Code matched. Password reset successful.');
+                    // 비밀번호 재설정 로직 추가
+                } else {
+                    alert('Code did not match. Please try again.');
+                }
+            })
+            .catch(error => {
+                // 오류 처리
+                console.error('There was an error!', error);
+                alert('Failed to reset password. Please check your information and try again.');
+            });
+    }
+</script>
+</body>
+</html>
