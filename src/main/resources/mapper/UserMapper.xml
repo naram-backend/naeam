@@ -29,4 +29,15 @@
         set user_password = #{newPassword}
         where user_number = #{userNumber}
     </update>
+    
+<!-- 회원가입 -->
+    <insert id="userJoin" parameterType="userDto">
+        insert into users (user_id, user_password, user_name, admin_check, user_email,user_birth,user_calendar)
+        values (#{userId},#{userPassword},#{userName},#{adminCheck},#{userEmail},#{userBirth},#{userCalendar})
+    </insert>
+<!-- 회원 추가정보 -->
+    <insert id="userAdd" parameterType="userAddDto">
+        insert into user_add (user_number, address, address_detail,address_post, phone, gender, nickname)
+        values (LAST_INSERT_ID(),#{address},#{addressDetail},#{addressPost},#{phone},#{gender},#{nickname})
+    </insert>
 </mapper>

@@ -1,5 +1,6 @@
 package com.example.naram.mapper;
 
+import com.example.naram.domain.dto.UserAddDto;
 import com.example.naram.domain.dto.UserDto;
 import com.example.naram.domain.vo.CheckPwVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,4 +18,9 @@ public interface UserMapper {
     public String checkPw(@Param("userNumber")Long userNumber);
 //  비밀번호 재설정
     public void updatePw(@Param("userNumber")Long userNumber, @Param("newPassword")String newPassword);
+
+//  회원가입
+    public void userJoin(UserDto userDto);
+//  회원 추가정보
+    public void userAdd(UserAddDto userAddDto);
 }

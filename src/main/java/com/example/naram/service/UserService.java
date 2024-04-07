@@ -1,5 +1,6 @@
 package com.example.naram.service;
 
+import com.example.naram.domain.dto.UserAddDto;
 import com.example.naram.domain.dto.UserDto;
 import com.example.naram.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -67,4 +68,41 @@ public class UserService {
             throw new Exception("비밀번호 변경에 실패했습니다.");
         }
     }
+
+//    회원가입
+    @Transactional
+    public void insertUser (UserDto userDto, UserAddDto userAddDto) throws Exception{
+        log.info("회원가입 서비스 진입");
+        try {
+            log.info("===============");
+            log.info("userJoin");
+            log.info("userDto : {}",userDto);
+            userMapper.userJoin(userDto);
+            log.info("userADd");
+            userMapper.userAdd(userAddDto);
+            log.info("===============");
+        } catch (Exception e){
+            log.error("회원정보 등록중 오류 발생 : {}",e.getMessage());
+            e.printStackTrace(); // 예외 스택 트레이스 출력
+            throw new Exception("회원가입 등록 실패");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

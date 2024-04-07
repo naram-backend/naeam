@@ -1,7 +1,9 @@
 package com.example.naram.controller;
 
+import com.example.naram.domain.dto.UserAddDto;
 import com.example.naram.domain.dto.UserDto;
 import com.example.naram.domain.vo.CheckPwVo;
+import com.example.naram.domain.vo.UserJoinRequestVo;
 import com.example.naram.domain.vo.UserLoginVo;
 import com.example.naram.domain.vo.VerificationVo;
 import com.example.naram.service.MailService;
@@ -41,6 +43,7 @@ public class UserController {
             userLoginVo.setUserId(userDto.getUserId());
             userLoginVo.setUserName(userDto.getUserName());
             userLoginVo.setUserEmail(userDto.getUserEmail());
+            userLoginVo.setAdminCheck(userDto.isAdminCheck());
             log.info("로그인 정보 =====================  userLoginVo{}",userLoginVo);
             return ResponseEntity.ok(userLoginVo);
         } catch (Exception e) {
@@ -139,4 +142,37 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"message\": \"비밀번호 변경에 실패했습니다.\"}");
         }
     }
+
+//    회원가입
+    @PostMapping("/join")
+    public ResponseEntity<?> userJoin(@RequestBody UserJoinRequestVo rq){
+        UserDto user = new UserDto();
+        user.setUserId(rq.getUserId());
+        user.setUserPassword(rq.getUserPassword());
+        user.setUserName(rq.getUserName());
+        user.setUserEmail(rq.getUserEmail());
+        user.setUserBirth(rq.getUserBirth());
+        user.setUserCalendar(rq.isUserCalendar());
+        user.setAdminCheck(false);
+        log.info("컨트롤러 userDto : {}",user);
+
+        UserAddDto add = new UserAddDto();
+        add.setAddress(rq.getAddress());
+        add.setAddressDetail(rq.getAddressDetail());
+        add.setAddressPost(rq.getAddressPost());
+        add.setPhone(rq.getPhone());
+        add.setGender(rq.isGender());
+        add.setNickname(rq.getNickname());
+        log.info("컨트롤러 userAddDto : {}",add);
+
+        try{
+            userService.insertUser(user,add);
+            log.info("회원등록완료");
+            return ResponseEntity.ok("{\"message\": \"회원등록 성공!!\"}");
+        }catch (Exception e){
+            log.info("회원 등록 실패");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"회원등록 실패\"}");
+        }
+    }
+
 }
