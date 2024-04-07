@@ -4,7 +4,6 @@ import com.example.naram.domain.dto.NoticeDto;
 import com.example.naram.domain.vo.Criteria;
 import com.example.naram.domain.vo.NoticeDetailVo;
 import com.example.naram.domain.vo.SearchVo;
-import com.example.naram.mapper.NoticeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
