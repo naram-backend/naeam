@@ -1,4 +1,4 @@
-package com.example.naram.domain.dto;
+package com.example.naram.domain.vo;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,13 +7,17 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @NoArgsConstructor
-public class UserDto {
+public class MyPageVo {
     private Long userNumber;
     private String userId;
-    private String userPassword;
     private String userName;
     private String userEmail;
     private String userBirth;
     private boolean userCalendar;
-    private boolean adminCheck;
+    private String address;
+    private String addressDetail;
+    private String addressPost;
+    private String phone;
+    private boolean gender;
+    private String nickname;
 }

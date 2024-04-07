@@ -19,5 +19,7 @@
         <typeAlias type="com.example.naram.domain.vo.UserLoginVo" alias="userLoginVo"/>
         <typeAlias type="com.example.naram.domain.vo.VerificationVo" alias="verificationVo"/>
         <typeAlias type="com.example.naram.domain.vo.CheckPwVo" alias="checkPwVo"/>
+        <typeAlias type="com.example.naram.domain.vo.UserJoinRequestVo" alias="userJoinRequestVo"/>
+        <typeAlias type="com.example.naram.domain.vo.MyPageVo" alias="myPageVo"/>
     </typeAliases>
 </configuration>
