@@ -2,27 +2,29 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-    <typeAliases>
+        <typeAliases>
 
-<!--     dto     -->
-        <typeAlias type="com.example.naram.domain.dto.NoticeDto" alias="noticeDto"/>
-        <typeAlias type="com.example.naram.domain.dto.NoticeFileDto" alias="noticeFileDto"/>
-        <typeAlias type="com.example.naram.domain.dto.PromotionDto" alias="promotionDto"/>
-        <typeAlias type="com.example.naram.domain.dto.PromotionFileDto" alias="promotionFileDto"/>
-        <typeAlias type="com.example.naram.domain.dto.QnaDto" alias="qnaDto"/>
-        <typeAlias type="com.example.naram.domain.dto.QnaFileDto" alias="qnaFileDto"/>
-        <typeAlias type="com.example.naram.domain.dto.QnaCommentDto" alias="qnaCommentDto"/>
-        <typeAlias type="com.example.naram.domain.dto.UserDto" alias="userDto"/>
-        <typeAlias type="com.example.naram.domain.dto.UserAddDto" alias="userAddDto"/>
+                <!--     dto     -->
+                <typeAlias type="com.example.naram.domain.dto.NoticeDto" alias="noticeDto"/>
+                <typeAlias type="com.example.naram.domain.dto.NoticeFileDto" alias="noticeFileDto"/>
+                <typeAlias type="com.example.naram.domain.dto.PromotionDto" alias="promotionDto"/>
+                <typeAlias type="com.example.naram.domain.dto.PromotionFileDto" alias="promotionFileDto"/>
+                <typeAlias type="com.example.naram.domain.dto.QnaDto" alias="qnaDto"/>
+                <typeAlias type="com.example.naram.domain.dto.QnaFileDto" alias="qnaFileDto"/>
+                <typeAlias type="com.example.naram.domain.dto.QnaCommentDto" alias="qnaCommentDto"/>
+                <typeAlias type="com.example.naram.domain.dto.UserDto" alias="userDto"/>
+                <typeAlias type="com.example.naram.domain.dto.UserAddDto" alias="userAddDto"/>
 
-<!--     vo   -->
-        <typeAlias type="com.example.naram.domain.vo.UserLoginVo" alias="userLoginVo"/>
-        <typeAlias type="com.example.naram.domain.vo.VerificationVo" alias="verificationVo"/>
-        <typeAlias type="com.example.naram.domain.vo.CheckPwVo" alias="checkPwVo"/>
-        <typeAlias type="com.example.naram.domain.vo.NoticeDetailVo" alias="noticeDetailVo"/>
-        <typeAlias type="com.example.naram.domain.vo.NoticeUpdateVo" alias="noticeUpdateVo"/>
-        <typeAlias type="com.example.naram.domain.vo.PageVo" alias="pageVo"/>
-        <typeAlias type="com.example.naram.domain.vo.SearchVo" alias="searchVo"/>
-        <typeAlias type="com.example.naram.domain.vo.Criteria" alias="criteria"/>
-    </typeAliases>
+                <!--     vo   -->
+                <typeAlias type="com.example.naram.domain.vo.UserLoginVo" alias="userLoginVo"/>
+                <typeAlias type="com.example.naram.domain.vo.VerificationVo" alias="verificationVo"/>
+                <typeAlias type="com.example.naram.domain.vo.CheckPwVo" alias="checkPwVo"/>
+                <typeAlias type="com.example.naram.domain.vo.UserJoinRequestVo" alias="userJoinRequestVo"/>
+                <typeAlias type="com.example.naram.domain.vo.MyPageVo" alias="myPageVo"/>
+                <typeAlias type="com.example.naram.domain.vo.NoticeDetailVo" alias="noticeDetailVo"/>
+                <typeAlias type="com.example.naram.domain.vo.NoticeUpdateVo" alias="noticeUpdateVo"/>
+                <typeAlias type="com.example.naram.domain.vo.PageVo" alias="pageVo"/>
+                <typeAlias type="com.example.naram.domain.vo.SearchVo" alias="searchVo"/>
+                <typeAlias type="com.example.naram.domain.vo.Criteria" alias="criteria"/>
+        </typeAliases>
 </configuration>

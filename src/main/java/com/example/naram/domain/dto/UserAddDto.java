@@ -12,6 +12,7 @@ public class UserAddDto {
     private Long userNumber;
     private String address;
     private String addressDetail;
+    private String addressPost;
     private String phone;
     private boolean gender;
     private String nickname;
