@@ -22,7 +22,6 @@
                 <typeAlias type="com.example.naram.domain.vo.UserJoinRequestVo" alias="userJoinRequestVo"/>
                 <typeAlias type="com.example.naram.domain.vo.MyPageVo" alias="myPageVo"/>
                 <typeAlias type="com.example.naram.domain.vo.NoticeDetailVo" alias="noticeDetailVo"/>
-                <typeAlias type="com.example.naram.domain.vo.NoticeUpdateVo" alias="noticeUpdateVo"/>
                 <typeAlias type="com.example.naram.domain.vo.PageVo" alias="pageVo"/>
                 <typeAlias type="com.example.naram.domain.vo.SearchVo" alias="searchVo"/>
                 <typeAlias type="com.example.naram.domain.vo.Criteria" alias="criteria"/>

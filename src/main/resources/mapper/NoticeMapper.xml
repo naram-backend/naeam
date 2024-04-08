@@ -56,7 +56,7 @@
     </select>
 
     <!-- 공지사항 수정하기 -->
-    <update id="updateNotice" parameterType="NoticeUpdateVo">
+    <update id="updateNotice" parameterType="NoticeDto">
         UPDATE notice
             SET
                 notice_title = #{noticeTitle},

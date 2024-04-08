@@ -4,7 +4,6 @@ import com.example.naram.domain.dto.NoticeDto;
 import com.example.naram.domain.vo.Criteria;
 import com.example.naram.domain.vo.NoticeDetailVo;
 import com.example.naram.domain.vo.SearchVo;
-import com.example.naram.domain.vo.NoticeUpdateVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,7 +29,7 @@ public interface NoticeMapper {
     public NoticeDetailVo viewDetailNotice(Long noticeNumber);
 
     //공지사항 수정
-    public void updateNotice(NoticeUpdateVo noticeUpdateVo);
+    public void updateNotice(NoticeDto noticeDto);
     
     //공지사항 삭제
     public void deleteNotice(Long noticeNumber);

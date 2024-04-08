@@ -41,13 +41,25 @@ class NoticeServiceTest {
         SearchVo searchVo = new SearchVo();
         criteria.setPage(0);
         criteria.setAmount(15);
-        searchVo.setKeyword("테");
+        searchVo.setKeyword("");
         searchVo.setCate("noticeUser");
         List<NoticeDetailVo> list = noticeService.viewNotice(criteria, searchVo);
 
         for (NoticeDetailVo noticeDetailVo : list ) {
             log.info("가져온 공지사항 정보 : {}", noticeDetailVo);
         }
+    }
+
+    @Test
+    @DisplayName("게시글 수정")
+//    @Disabled
+    void updateNotice() {
+        NoticeDto noticeDto = new NoticeDto();
+        noticeDto.setNoticeNumber(8L);
+        noticeDto.setNoticeTitle("수정 서비스 테스트");
+        noticeDto.setNoticeContent("수정 서비스 테스트 내용입니다");
+        NoticeDetailVo updateNotice = noticeService.updateNotice(noticeDto);
+        log.info("수정된 정보 : {}", updateNotice);
     }
 
 

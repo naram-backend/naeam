@@ -38,4 +38,10 @@ public class NoticeService {
         return noticeMapper.getTotalNotice(searchVo);
     }
 
+//    공지사항　수정
+    public NoticeDetailVo updateNotice(NoticeDto noticeDto){
+        noticeMapper.updateNotice(noticeDto);
+        return noticeMapper.viewDetailNotice(noticeDto.getNoticeNumber());
+    }
+
 }

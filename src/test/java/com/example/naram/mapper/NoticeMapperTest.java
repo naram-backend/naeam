@@ -4,7 +4,6 @@ import com.example.naram.domain.dto.NoticeDto;
 import com.example.naram.domain.vo.Criteria;
 import com.example.naram.domain.vo.NoticeDetailVo;
 import com.example.naram.domain.vo.SearchVo;
-import com.example.naram.domain.vo.NoticeUpdateVo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,10 +76,10 @@ class NoticeMapperTest {
     @DisplayName("공지사항 수정")
 //    @Disabled
     void updateNotice() {
-        NoticeUpdateVo noticeUpdateVo = new NoticeUpdateVo();
+        NoticeDto noticeUpdateVo = new NoticeDto();
         noticeUpdateVo.setNoticeNumber(8L);
-        noticeUpdateVo.setNoticeTitle("수정됐나");
-        noticeUpdateVo.setNoticeContent("내용도");
+        noticeUpdateVo.setNoticeTitle("수정됐나123");
+        noticeUpdateVo.setNoticeContent("내용도123");
         noticeMapper.updateNotice(noticeUpdateVo);
     }
 
