@@ -73,14 +73,23 @@ class NoticeMapperTest {
     }
 
     @Test
+    @DisplayName("공지사항 조회수")
+//    @Disabled
+    void noticeCount() {
+        noticeMapper.noticeCount(16L);
+        NoticeDetailVo noticeDetailVo = noticeMapper.viewDetailNotice(16L);
+        log.info("공지사항 세부정보 : {}", noticeDetailVo);
+    }
+
+    @Test
     @DisplayName("공지사항 수정")
 //    @Disabled
     void updateNotice() {
-        NoticeDto noticeUpdateVo = new NoticeDto();
-        noticeUpdateVo.setNoticeNumber(8L);
-        noticeUpdateVo.setNoticeTitle("수정됐나123");
-        noticeUpdateVo.setNoticeContent("내용도123");
-        noticeMapper.updateNotice(noticeUpdateVo);
+        NoticeDto noticeDto = new NoticeDto();
+        noticeDto.setNoticeNumber(8L);
+        noticeDto.setNoticeTitle("수정됐나123");
+        noticeDto.setNoticeContent("내용도123");
+        noticeMapper.updateNotice(noticeDto);
     }
 
     @Test

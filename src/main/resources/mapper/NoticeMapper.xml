@@ -55,6 +55,14 @@
         </if>
     </select>
 
+    <!-- 공지사항 조회수 -->
+    <update id="noticeCount"  parameterType="Long">
+        UPDATE notice
+        SET
+            notice_view = notice_view + 1
+        WHERE notice_number = #{noticeNumber}
+    </update>
+
     <!-- 공지사항 수정하기 -->
     <update id="updateNotice" parameterType="NoticeDto">
         UPDATE notice

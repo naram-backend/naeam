@@ -23,8 +23,8 @@ class NoticeServiceTest {
 //    @Disabled
     void createNotice() {
         NoticeDto noticeDto = new NoticeDto();
-        noticeDto.setNoticeTitle("test123");
-        noticeDto.setNoticeContent("testcontent123");
+        noticeDto.setNoticeTitle("test");
+        noticeDto.setNoticeContent("test");
         noticeDto.setNoticeView(0);
         noticeDto.setHiring(false);
         noticeDto.setImportant(false);
@@ -36,14 +36,14 @@ class NoticeServiceTest {
     @Test
     @DisplayName("게시글 조회")
 //    @Disabled
-    void viewNotice() {
+    void listNotice() {
         Criteria criteria = new Criteria();
         SearchVo searchVo = new SearchVo();
         criteria.setPage(0);
         criteria.setAmount(15);
         searchVo.setKeyword("");
         searchVo.setCate("noticeUser");
-        List<NoticeDetailVo> list = noticeService.viewNotice(criteria, searchVo);
+        List<NoticeDetailVo> list = noticeService.listNotice(criteria, searchVo);
 
         for (NoticeDetailVo noticeDetailVo : list ) {
             log.info("가져온 공지사항 정보 : {}", noticeDetailVo);

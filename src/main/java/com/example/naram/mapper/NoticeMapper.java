@@ -28,6 +28,9 @@ public interface NoticeMapper {
     //공지사항 상세정보
     public NoticeDetailVo viewDetailNotice(Long noticeNumber);
 
+    //공지사항 조회수 증가
+    public void noticeCount(Long noticeNumber);
+
     //공지사항 수정
     public void updateNotice(NoticeDto noticeDto);
     
