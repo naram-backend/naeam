@@ -31,7 +31,6 @@ public class NoticeController {
         log.info("===============공지사항 등록 컨트롤러 실행 !! {}", noticeDto);
         noticeService.createNotice(noticeDto);
         return ResponseEntity.ok("");
-
     }
 
     //  공지사항 리스트 조회 컨트롤러
@@ -71,7 +70,7 @@ public class NoticeController {
 
     // 공지사항 삭제
     @GetMapping("/delete")
-    public RedirectView noticeDelete(Long noticeNumber){
+    public RedirectView noticeDelete(@RequestParam Long noticeNumber){
         noticeService.deleteNotice(noticeNumber);
         return new RedirectView("/list");
     }
