@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class PromotionFileDto {
     private Long promotionFileNumber;
     private Long promotionNumber;
-    private String promotionUrl;
-    private String promotionDate;
+    private String fileUrl;
+    private String fileName;
 }
