@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.naram.mapper.NoticeMapper">
+
+    <!-- 공지사항 작성 -->
+    <insert id="createNotice" parameterType="NoticeDto">
+        INSERT INTO notice ( user_number, notice_title, notice_content, notice_register_date, important, hiring, notice_view)
+        VALUES (#{userNumber}, #{noticeTitle}, #{noticeContent}, CURRENT_TIMESTAMP(), #{important}, #{hiring}, #{noticeView})
+        <selectKey keyProperty="noticeNumber" resultType="Long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <!-- 전체 공지사항 목록 -->
+    <select id="viewNotice" resultType="NoticeDetailVo">
+        SELECT n.NOTICE_NUMBER, n.USER_NUMBER, n.NOTICE_TITLE, NOTICE_CONTENT, DATE_FORMAT(NOTICE_REGISTER_DATE, '%Y-%m-%d') AS NOTICE_REGISTER_DATE, n.IMPORTANT, n.HIRING, n.NOTICE_VIEW,
+        u.user_name
+        FROM notice n join users u on n.user_number = u.user_number
+        <where>
+            <choose>
+                <when test="searchVo.cate == 'noticeTitle'">
+                    n.NOTICE_TITLE LIKE CONCAT('%', #{searchVo.keyword}, '%')
+                </when>
+                <when test="searchVo.cate == 'noticeContent'">
+                    n.NOTICE_CONTENT LIKE CONCAT('%', #{searchVo.keyword}, '%')
+                </when>
+                <when test="searchVo.cate == 'noticeUser'">
+                    u.USER_NAME LIKE CONCAT('%', #{searchVo.keyword}, '%')
+                </when>
+            </choose>
+        </where>
+        ORDER BY NOTICE_NUMBER DESC
+        LIMIT #{criteria.amount} OFFSET #{criteria.page}
+    </select>
+
+    <!-- 공지사항 상세정보 -->
+    <select id="viewDetailNotice" parameterType="Long" resultType="NoticeDetailVo">
+        SELECT n.NOTICE_NUMBER, n.USER_NUMBER, n.NOTICE_TITLE, NOTICE_CONTENT, DATE_FORMAT(NOTICE_REGISTER_DATE, '%Y-%m-%d') AS NOTICE_REGISTER_DATE, n.IMPORTANT, n.HIRING, n.NOTICE_VIEW, u.USER_NAME
+        FROM notice n join users u on n.USER_NUMBER = u.USER_NUMBER
+        WHERE NOTICE_NUMBER = #{noticeNumber}
+    </select>
+
+    <!-- 검색별 글 수 -->
+    <select id="getTotalNotice" resultType="_int">
+        SELECT count(NOTICE_NUMBER)
+        FROM notice n join users u on n.user_number = u.user_number
+        <if test="searchVo.cate == 'noticeTitle'">
+            WHERE n.NOTICE_TITLE LIKE CONCAT('%', #{searchVo.keyword}, '%')
+        </if>
+        <if test="searchVo.cate == 'noticeContent'">
+            WHERE n.NOTICE_CONTENT LIKE CONCAT('%', #{searchVo.keyword}, '%')
+        </if>
+        <if test="searchVo.cate == 'noticeUser'">
+            WHERE u.USER_NAME LIKE CONCAT('%', #{searchVo.keyword}, '%')
+        </if>
+    </select>
+
+    <!-- 공지사항 조회수 -->
+    <update id="noticeCount"  parameterType="Long">
+        UPDATE notice
+        SET
+            notice_view = notice_view + 1
+        WHERE notice_number = #{noticeNumber}
+    </update>
+
+    <!-- 공지사항 수정하기 -->
+    <update id="updateNotice" parameterType="NoticeDto">
+        UPDATE notice
+            SET
+                notice_title = #{noticeTitle},
+                notice_content = #{noticeContent}
+        WHERE notice_number = #{noticeNumber}
+    </update>
+
+    <!-- 공지사항 삭제하기 -->
+    <delete id="deleteNotice">
+        DELETE FROM notice
+        WHERE notice_number = #{noticeNumber}
+    </delete>
+
+</mapper>
