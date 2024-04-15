@@ -16,14 +16,16 @@
                 <typeAlias type="com.example.naram.domain.dto.UserAddDto" alias="userAddDto"/>
 
                 <!--     vo   -->
-                <typeAlias type="com.example.naram.domain.vo.UserLoginVo" alias="userLoginVo"/>
-                <typeAlias type="com.example.naram.domain.vo.VerificationVo" alias="verificationVo"/>
                 <typeAlias type="com.example.naram.domain.vo.CheckPwVo" alias="checkPwVo"/>
-                <typeAlias type="com.example.naram.domain.vo.UserJoinRequestVo" alias="userJoinRequestVo"/>
+                <typeAlias type="com.example.naram.domain.vo.Criteria" alias="criteria"/>
                 <typeAlias type="com.example.naram.domain.vo.MyPageVo" alias="myPageVo"/>
                 <typeAlias type="com.example.naram.domain.vo.NoticeDetailVo" alias="noticeDetailVo"/>
+                <typeAlias type="com.example.naram.domain.vo.NtUploadVo" alias="ntUploadVo"/>
                 <typeAlias type="com.example.naram.domain.vo.PageVo" alias="pageVo"/>
+                <typeAlias type="com.example.naram.domain.vo.PrUploadVo" alias="prUploadVo"/>
                 <typeAlias type="com.example.naram.domain.vo.SearchVo" alias="searchVo"/>
-                <typeAlias type="com.example.naram.domain.vo.Criteria" alias="criteria"/>
+                <typeAlias type="com.example.naram.domain.vo.UserJoinRequestVo" alias="userJoinRequestVo"/>
+                <typeAlias type="com.example.naram.domain.vo.UserLoginVo" alias="userLoginVo"/>
+                <typeAlias type="com.example.naram.domain.vo.VerificationVo" alias="verificationVo"/>
         </typeAliases>
 </configuration>

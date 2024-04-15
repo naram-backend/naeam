@@ -1,6 +1,7 @@
 package com.example.naram.mapper;
 
 import com.example.naram.domain.dto.NoticeDto;
+import com.example.naram.domain.dto.NoticeFileDto;
 import com.example.naram.domain.vo.Criteria;
 import com.example.naram.domain.vo.NoticeDetailVo;
 import com.example.naram.domain.vo.SearchVo;
@@ -18,6 +19,9 @@ import java.util.List;
 public interface NoticeMapper {
     //공지사항 새글 작성
     public void createNotice(NoticeDto noticeDto);
+    
+    //공지사항 파일 업로드
+    public void uploadFileNotice(NoticeFileDto noticeFileDto);
 
     //공지사항 전체 조회
     public List<NoticeDetailVo> viewNotice(@Param("criteria") Criteria criteria, @Param("searchVo") SearchVo searchVo);
