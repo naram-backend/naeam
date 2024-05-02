@@ -30,7 +30,7 @@ class NoticeServiceTest {
         noticeDto.setImportant(false);
         noticeDto.setNoticeView(0);
         noticeDto.setUserNumber(2L);
-        noticeService.createNotice(noticeDto);
+        noticeService.updateNotice(noticeDto);
     }
 
     @Test

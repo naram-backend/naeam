@@ -3,6 +3,7 @@ package com.example.naram.service;
 import com.example.naram.domain.dto.UserAddDto;
 import com.example.naram.domain.dto.UserDto;
 import com.example.naram.domain.vo.MyPageVo;
+import com.example.naram.domain.vo.UserInfoVo;
 import com.example.naram.domain.vo.UserLoginVo;
 import com.example.naram.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -126,12 +127,15 @@ public class UserService {
         }
     }
 
-
-
-
-
-
-
-
+//
+    public UserInfoVo userInfo(String userId)throws Exception{
+        try {
+            log.info("서비스진입");
+            log.info("userInfo : {}", userMapper.userInfo(userId));
+        return userMapper.userInfo(userId);
+        } catch (Exception e){
+            throw new Exception("로그인정보 로딩 실패");
+        }
+    }
 
 }
