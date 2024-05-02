@@ -39,29 +39,32 @@ public class NoticeController {
     //  공지사항 등록 POST 매핑
     @PostMapping("/upload")
     public ResponseEntity<?> uploadNotice(@RequestBody NtUploadVo nt){
+        NoticeFileDto noticeFileDto = new NoticeFileDto();
 //      파일 디코딩
-        String fileData = nt.getFileData();
-        byte[] decodedBytes = Base64.getDecoder().decode(fileData.substring(fileData.indexOf(",") + 1));
+        try {
+            String fileData = nt.getFileData();
+            byte[] decodedBytes = Base64.getDecoder().decode(fileData.substring(fileData.indexOf(",") + 1));
+            //      파일 클라우드 스토리지에 저장
+            String origin = nt.getFileName();
+            String fileName = UUID.randomUUID().toString() + "-" + origin;
+            String blobName = "notice/file/" + fileName;
+            BlobId blobId = BlobId.of(bucketName, blobName);
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+            Blob blob = storage.create(blobInfo, decodedBytes);
+            String fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + blobName;
 
-//      파일 클라우드 스토리지에 저장
-        String origin = nt.getFileName();
-        String fileName = UUID.randomUUID().toString() + "-" + origin;
-        String blobName = "notice/file/" + fileName;
-        BlobId blobId = BlobId.of(bucketName, blobName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-        Blob blob = storage.create(blobInfo, decodedBytes);
-        String fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + blobName;
+            noticeFileDto.setFileUrl(fileUrl);
+            noticeFileDto.setFileName(origin);
+            log.info("noticeFileDto == {}",noticeFileDto);
+        } catch (NullPointerException e) {
+            noticeFileDto = null;
+        }
 
         NoticeDto noticeDto = new NoticeDto();
         noticeDto.setUserNumber(nt.getUserNumber());
         noticeDto.setNoticeTitle(nt.getNoticeTitle());
         noticeDto.setNoticeContent(nt.getNoticeContent());
         log.info("noticeDto == {}",noticeDto);
-
-        NoticeFileDto noticeFileDto = new NoticeFileDto();
-        noticeFileDto.setFileUrl(fileUrl);
-        noticeFileDto.setFileName(origin);
-        log.info("noticeFileDto == {}",noticeFileDto);
 
         try{
             noticeService.noticeUpload(noticeDto,noticeFileDto);
@@ -73,45 +76,107 @@ public class NoticeController {
     }
 
     //  공지사항 리스트 조회 컨트롤러
-    @GetMapping("/list/{page}")
-    public Map<String, Object> viewNotice(@PathVariable("page")int page, SearchVo searchVo){
+    @GetMapping("/list")
+    public ResponseEntity<?> viewNotice(SearchVo searchVo){
         log.info("===============공지사항 리스트 조회 컨트롤러 실행 !!");
-        Criteria criteria = new Criteria();
-        criteria.setPage(page);
-        criteria.setAmount(15);
-        PageVo pageVo = new PageVo(noticeService.getTotalCount(searchVo), criteria);
-        List<NoticeDetailVo> noticeList = noticeService.listNotice(criteria, searchVo);
+        try {
+            List<NoticeDetailVo> noticeList = noticeService.listNotice(searchVo);
+            log.info("===============공지사항 상세정보 컨트롤러 결과 !! {}", noticeList);
+            return ResponseEntity.ok(noticeList);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"공지사항 불러오기 실패\"}");
+        }
 
-        Map<String, Object> noticeMap = new HashMap<>();
-        noticeMap.put("pageVo", pageVo);
-        noticeMap.put("noticeList", noticeList);
-        log.info("===============공지사항 리스트 조회 컨트롤러 결과 !! {}", noticeList);
-
-        return noticeMap;
     }
 
     // 공지사항 상세정보
-    @GetMapping(value={"/noticeDetail","/noticeConfig"})
-    public void selectNoticeDetail(@RequestParam(name = "noticeNumber")Long noticeNumber, Model model){
+    @GetMapping("/detail")
+    public ResponseEntity<?> selectNoticeDetail(@RequestParam(name = "noticeNumber")Long noticeNumber){
         log.info("===============공지사항 상세정보 컨트롤러 실행 !! {}", noticeNumber);
-        noticeService.updateCount(noticeNumber);
-        NoticeDetailVo noticeDetail = noticeService.viewDetailNotice(noticeNumber);
-        log.info("===============공지사항 상세정보 컨트롤러 결과 !! {}", noticeDetail);
-        model.addAttribute("noticeDetail", noticeDetail);
+        try {
+            noticeService.updateCount(noticeNumber);
+            NoticeDetailVo noticeDetail = noticeService.viewDetailNotice(noticeNumber);
+            if (noticeDetail == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"null 값\"}");
+            }
+            log.info("===============공지사항 상세정보 컨트롤러 결과 !! {}", noticeDetail);
+            return ResponseEntity.ok(noticeDetail);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"공지사항 불러오기 실패\"}");
+        }
     }
 
     // 공지사항 수정 컨트롤러
     @PostMapping("/noticeConfig")
-    public RedirectView noticeUpdate(@RequestBody NoticeDto noticeDto){
-        noticeService.updateNotice(noticeDto);
-        return new RedirectView("/list");
+    public ResponseEntity<?> noticeUpdate(@RequestBody NtUploadVo nt){
+        NoticeFileDto noticeFileDto = new NoticeFileDto();
+//      파일 디코딩
+        try {
+            String fileData = nt.getFileData();
+            byte[] decodedBytes = Base64.getDecoder().decode(fileData.substring(fileData.indexOf(",") + 1));
+            //      파일 클라우드 스토리지에 저장
+            String origin = nt.getFileName();
+            String fileName = UUID.randomUUID().toString() + "-" + origin;
+            String blobName = "notice/file/" + fileName;
+            BlobId blobId = BlobId.of(bucketName, blobName);
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+            Blob blob = storage.create(blobInfo, decodedBytes);
+            String fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + blobName;
+
+            noticeFileDto.setFileUrl(fileUrl);
+            noticeFileDto.setFileName(origin);
+            noticeFileDto.setNoticeNumber(nt.getNoticeNumber());
+            log.info("try 문에 있는 noticeFileDto == {}",noticeFileDto);
+        } catch (NullPointerException e) {
+            noticeFileDto = null;
+        }
+
+        NoticeDto noticeDto = new NoticeDto();
+        noticeDto.setUserNumber(nt.getUserNumber());
+        noticeDto.setNoticeNumber(nt.getNoticeNumber());
+        noticeDto.setNoticeTitle(nt.getNoticeTitle());
+        noticeDto.setNoticeContent(nt.getNoticeContent());
+        log.info("try 문에 없는 noticeFileDto == {}",noticeFileDto);
+        log.info("noticeDto == {}",noticeDto);
+
+        try{
+            NoticeDetailVo noticeDetailVo = noticeService.noticeUpdate(noticeDto,noticeFileDto);
+            return ResponseEntity.ok(noticeDetailVo);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"공지사항 수정 실패\"}");
+        }
+    }
+
+    //공지사항 수정
+    @GetMapping("/noticeConfig")
+    public ResponseEntity<?> noticeUpdateView(@RequestParam(name = "noticeNumber")Long noticeNumber){
+        log.info("===============공지사항 수정 확인 컨트롤러 실행 !! {}", noticeNumber);
+        try {
+            NoticeDetailVo noticeDetail = noticeService.viewDetailNotice(noticeNumber);
+            if (noticeDetail == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"null 값\"}");
+            }
+            log.info("===============공지사항 수정 확인 컨트롤러 결과 !! {}", noticeDetail);
+            return ResponseEntity.ok(noticeDetail);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"공지사항 수정 불러오기 실패\"}");
+        }
     }
 
     // 공지사항 삭제
     @GetMapping("/delete")
-    public RedirectView noticeDelete(@RequestParam Long noticeNumber){
-        noticeService.deleteNotice(noticeNumber);
-        return new RedirectView("/list");
+    public ResponseEntity<?> noticeDelete(@RequestParam Long noticeNumber){
+        try {
+            NoticeDetailVo noticeDetailVo = noticeService.viewDetailNotice(noticeNumber);
+            if (noticeDetailVo == null) {
+                throw new IllegalArgumentException("삭제할 공지사항이 존재하지 않습니다.");
+            }
+            noticeService.deleteNotice(noticeNumber);
+            log.info("===============공지사항 삭제 완료 !!");
+            return ResponseEntity.ok("{\"message\": \"공지사항 삭제 완료\"}");
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"공지사항 삭제 실패\"}");
+        }
     }
 
 }

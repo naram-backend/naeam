@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class NtUploadVo {
     private Long userNumber;
+    private Long noticeNumber;
     private String noticeTitle;
     private String noticeContent;
     private String fileName;

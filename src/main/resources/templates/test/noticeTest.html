@@ -75,13 +75,13 @@
                 const postData = {
                     noticeTitle: title,
                     noticeContent: content,
-                    userNumber:1,
+                    noticeNumber:7,
                     fileName:file.name,
                     fileData: fileData  // Base64로 인코딩된 파일 데이터
                 };
 
                 // 서버로 JSON 데이터 전송
-                fetch('/notice/upload', {
+                fetch('/notice/noticeConfig', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

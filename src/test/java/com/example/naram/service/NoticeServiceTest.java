@@ -37,13 +37,15 @@ class NoticeServiceTest {
     @DisplayName("게시글 조회")
 //    @Disabled
     void listNotice() {
-        Criteria criteria = new Criteria();
         SearchVo searchVo = new SearchVo();
-        criteria.setPage(0);
-        criteria.setAmount(15);
         searchVo.setKeyword("");
         searchVo.setCate("noticeUser");
-        List<NoticeDetailVo> list = noticeService.listNotice(criteria, searchVo);
+        List<NoticeDetailVo> list = null;
+        try {
+            list = noticeService.listNotice(searchVo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         for (NoticeDetailVo noticeDetailVo : list ) {
             log.info("가져온 공지사항 정보 : {}", noticeDetailVo);

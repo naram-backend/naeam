@@ -24,7 +24,7 @@ public interface NoticeMapper {
     public void uploadFileNotice(NoticeFileDto noticeFileDto);
 
     //공지사항 전체 조회
-    public List<NoticeDetailVo> viewNotice(@Param("criteria") Criteria criteria, @Param("searchVo") SearchVo searchVo);
+    public List<NoticeDetailVo> viewNotice(@Param("searchVo") SearchVo searchVo);
 
     //전체 공지사항 수
     public int getTotalNotice(@Param("searchVo") SearchVo searchVo);
@@ -37,6 +37,9 @@ public interface NoticeMapper {
 
     //공지사항 수정
     public void updateNotice(NoticeDto noticeDto);
+
+    //공지사항 파일 수정
+    public void updateFileNotice(NoticeFileDto noticeFileDto);
     
     //공지사항 삭제
     public void deleteNotice(Long noticeNumber);
