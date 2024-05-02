@@ -15,5 +15,5 @@ public class UserDto {
     private String userEmail;
     private String userBirth;
     private boolean userCalendar;
-    private boolean adminCheck;
+    private String adminCheck;
 }

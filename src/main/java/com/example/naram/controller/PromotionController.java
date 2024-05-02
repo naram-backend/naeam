@@ -2,6 +2,7 @@ package com.example.naram.controller;
 
 import com.example.naram.domain.dto.PromotionDto;
 import com.example.naram.domain.dto.PromotionFileDto;
+import com.example.naram.domain.vo.PrDetailVo;
 import com.example.naram.domain.vo.PrUploadVo;
 import com.example.naram.service.PromotionService;
 import com.google.cloud.storage.Blob;
@@ -14,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,6 +35,7 @@ public class PromotionController {
     @Value("${gcp.storage.bucket}")
     private String bucketName;
 
+//    게시글 작성
     @PostMapping("/upload")
     public ResponseEntity<?> uploadPost(@RequestBody PrUploadVo pr) {
 //      파일 디코딩
@@ -46,7 +45,7 @@ public class PromotionController {
 //      파일 클라우드 스토리지에 저장
         String origin = pr.getFileName();
         String fileName = UUID.randomUUID().toString() + "-" + origin;
-        String blobName = "file/" + fileName;
+        String blobName = "promotion/file/" + fileName;
         BlobId blobId = BlobId.of(bucketName, blobName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
         Blob blob = storage.create(blobInfo, decodedBytes);
@@ -69,6 +68,18 @@ public class PromotionController {
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"게시글 등록 실패\"}");
         }
+    }
 
+//    게시글 상세
+    @GetMapping("/detail")
+    public ResponseEntity<?> promotionDetail(@RequestParam(name = "promotionNumber")Long promotionNumber){
+        log.info("==========");
+        try{
+            PrDetailVo prDetailVo = promotionService.prDetail(promotionNumber);
+            log.info("prDetailVo = {}",prDetailVo);
+            return ResponseEntity.ok(prDetailVo);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"게시글 불러오기 실패\"}");
+        }
     }
 }

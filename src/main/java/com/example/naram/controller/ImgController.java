@@ -24,11 +24,11 @@ public class ImgController {
     @Value("${gcp.storage.bucket}")
     private String bucketName;
 
-    @PostMapping("/ImgUpload")
+    @PostMapping("/prImg")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
         log.info("확인");
         String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
-        String blobName = "img/" + fileName;
+        String blobName = "promotion/img/" + fileName;
         BlobId blobId = BlobId.of(bucketName, blobName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
         Blob blob = storage.create(blobInfo, file.getBytes());
