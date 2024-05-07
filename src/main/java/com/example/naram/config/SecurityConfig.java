@@ -54,6 +54,10 @@ public class SecurityConfig {
 //                        .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")
 //                        .anyRequest().authenticated()
 //                );
+        /* 테스트 끝나면 hasRole("ADMIN") 안에다가 집어넣기
+        ,"/notice/upload","/notice/noticeConfig"
+                ,"/notice/delete"
+        */
         return http.build();
     }
 

@@ -30,5 +30,10 @@ public class TestController {
         return "test/boardTest";
     }
 
+    @GetMapping("noticeTest")
+    public String noticeTest(){
+        return "test/noticeTest";
+    }
+
 
 }

@@ -7,16 +7,11 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @NoArgsConstructor
-public class NoticeDetailVo {
-    private Long noticeNumber;
+public class NtUploadVo {
     private Long userNumber;
-    private String userName;
+    private Long noticeNumber;
     private String noticeTitle;
     private String noticeContent;
-    private String noticeRegisterDate;
     private String fileName;
-    private String fileUrl;
-    private boolean important;
-    private boolean hiring;
-    private int noticeView;
+    private String fileData;
 }

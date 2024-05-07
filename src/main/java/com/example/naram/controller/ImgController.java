@@ -36,4 +36,17 @@ public class ImgController {
         log.info("imageUrl = {}",imageUrl);
         return ResponseEntity.ok(imageUrl);
     }
+
+    @PostMapping("/ntImg")
+    public ResponseEntity<String> uploadNoticeImage(@RequestParam("file") MultipartFile file) throws IOException {
+        log.info("확인");
+        String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+        String blobName = "notice/img/" + fileName;
+        BlobId blobId = BlobId.of(bucketName, blobName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+        Blob blob = storage.create(blobInfo, file.getBytes());
+        String imageUrl = "https://storage.googleapis.com/" + bucketName + "/" + blobName;
+        log.info("imageUrl = {}",imageUrl);
+        return ResponseEntity.ok(imageUrl);
+    }
 }

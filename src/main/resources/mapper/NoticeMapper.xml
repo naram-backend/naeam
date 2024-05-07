@@ -5,10 +5,16 @@
     <!-- 공지사항 작성 -->
     <insert id="createNotice" parameterType="NoticeDto">
         INSERT INTO notice ( user_number, notice_title, notice_content, notice_register_date, important, hiring, notice_view)
-        VALUES (#{userNumber}, #{noticeTitle}, #{noticeContent}, CURRENT_TIMESTAMP(), #{important}, #{hiring}, #{noticeView})
+        VALUES (#{userNumber}, #{noticeTitle}, #{noticeContent}, NOW(), #{important}, #{hiring}, #{noticeView})
         <selectKey keyProperty="noticeNumber" resultType="Long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
+    </insert>
+
+    <!-- 공지사항 파일 업로드 -->
+    <insert id="uploadFileNotice" parameterType="noticeFileDto">
+        insert into notice_file ( notice_number, file_url, file_name)
+        values (LAST_INSERT_ID(),#{fileUrl},#{fileName})
     </insert>
 
     <!-- 전체 공지사항 목록 -->
@@ -30,14 +36,16 @@
             </choose>
         </where>
         ORDER BY NOTICE_NUMBER DESC
-        LIMIT #{criteria.amount} OFFSET #{criteria.page}
     </select>
 
     <!-- 공지사항 상세정보 -->
     <select id="viewDetailNotice" parameterType="Long" resultType="NoticeDetailVo">
-        SELECT n.NOTICE_NUMBER, n.USER_NUMBER, n.NOTICE_TITLE, NOTICE_CONTENT, DATE_FORMAT(NOTICE_REGISTER_DATE, '%Y-%m-%d') AS NOTICE_REGISTER_DATE, n.IMPORTANT, n.HIRING, n.NOTICE_VIEW, u.USER_NAME
-        FROM notice n join users u on n.USER_NUMBER = u.USER_NUMBER
-        WHERE NOTICE_NUMBER = #{noticeNumber}
+        SELECT n.NOTICE_NUMBER, n.USER_NUMBER, n.NOTICE_TITLE, n.NOTICE_CONTENT, DATE_FORMAT(NOTICE_REGISTER_DATE, '%Y-%m-%d') AS NOTICE_REGISTER_DATE,
+               n.IMPORTANT, n.HIRING, n.NOTICE_VIEW, u.USER_NAME, nf.file_name, nf.file_url
+        FROM notice n
+            join users u on n.USER_NUMBER = u.USER_NUMBER
+            join notice_file nf on n.notice_number = nf.notice_number
+        WHERE n.NOTICE_NUMBER = #{noticeNumber}
     </select>
 
     <!-- 검색별 글 수 -->
@@ -69,6 +77,15 @@
             SET
                 notice_title = #{noticeTitle},
                 notice_content = #{noticeContent}
+        WHERE notice_number = #{noticeNumber}
+    </update>
+
+    <!-- 공지사항 파일 수정하기 -->
+    <update id="updateFileNotice" parameterType="NoticeFileDto">
+        UPDATE notice_file
+        SET
+            file_url = #{fileUrl},
+            file_name = #{fileName}
         WHERE notice_number = #{noticeNumber}
     </update>
 

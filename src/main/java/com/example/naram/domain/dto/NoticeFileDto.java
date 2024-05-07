@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class NoticeFileDto {
     private Long noticeFileNumber;
     private Long noticeNumber;
-    private String noticeUrl;
-    private String noticeDate;
+    private String fileUrl;
+    private String fileName;
 }

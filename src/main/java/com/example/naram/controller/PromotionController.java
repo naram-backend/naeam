@@ -38,29 +38,32 @@ public class PromotionController {
 //    게시글 작성
     @PostMapping("/upload")
     public ResponseEntity<?> uploadPost(@RequestBody PrUploadVo pr) {
+        PromotionFileDto promotionFileDto = new PromotionFileDto();
 //      파일 디코딩
-        String fileData = pr.getFileData();
-        byte[] decodedBytes = Base64.getDecoder().decode(fileData.substring(fileData.indexOf(",") + 1));
+        try{
+            String fileData = pr.getFileData();
+            byte[] decodedBytes = Base64.getDecoder().decode(fileData.substring(fileData.indexOf(",") + 1));
+            //      파일 클라우드 스토리지에 저장
+            String origin = pr.getFileName();
+            String fileName = UUID.randomUUID().toString() + "-" + origin;
+            String blobName = "promotion/file/" + fileName;
+            BlobId blobId = BlobId.of(bucketName, blobName);
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+            Blob blob = storage.create(blobInfo, decodedBytes);
+            String fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + blobName;
 
-//      파일 클라우드 스토리지에 저장
-        String origin = pr.getFileName();
-        String fileName = UUID.randomUUID().toString() + "-" + origin;
-        String blobName = "promotion/file/" + fileName;
-        BlobId blobId = BlobId.of(bucketName, blobName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-        Blob blob = storage.create(blobInfo, decodedBytes);
-        String fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + blobName;
+            promotionFileDto.setFileUrl(fileUrl);
+            promotionFileDto.setFileName(origin);
+            log.info("promotionFileDto == {}",promotionFileDto);
+        }catch (NullPointerException e){
+            promotionFileDto = null;
+        }
 
         PromotionDto promotionDto = new PromotionDto();
         promotionDto.setUserNumber(pr.getUserNumber());
         promotionDto.setPromotionTitle(pr.getPromotionTitle());
         promotionDto.setPromotionContent(pr.getPromotionContent());
         log.info("promotionDto == {}",promotionDto);
-
-        PromotionFileDto promotionFileDto = new PromotionFileDto();
-        promotionFileDto.setFileUrl(fileUrl);
-        promotionFileDto.setFileName(origin);
-        log.info("promotionFileDto == {}",promotionFileDto);
 
         try{
             promotionService.prUpload(promotionDto,promotionFileDto);
