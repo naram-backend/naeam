@@ -35,5 +35,10 @@ public class TestController {
         return "test/noticeTest";
     }
 
+    @GetMapping("qnaTest")
+    public String qnaTest(){
+        return "test/qnaTest";
+    }
+
 
 }

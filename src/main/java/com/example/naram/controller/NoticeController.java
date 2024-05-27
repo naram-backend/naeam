@@ -86,7 +86,6 @@ public class NoticeController {
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"공지사항 불러오기 실패\"}");
         }
-
     }
 
     // 공지사항 상세정보

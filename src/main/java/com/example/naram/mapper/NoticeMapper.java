@@ -2,7 +2,6 @@ package com.example.naram.mapper;
 
 import com.example.naram.domain.dto.NoticeDto;
 import com.example.naram.domain.dto.NoticeFileDto;
-import com.example.naram.domain.vo.Criteria;
 import com.example.naram.domain.vo.NoticeDetailVo;
 import com.example.naram.domain.vo.SearchVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -12,7 +11,6 @@ import java.util.List;
 
 /**
  * 공지사항 Mapper
- * 24.04.04
  * 홍재헌
  */
 @Mapper

@@ -11,7 +11,7 @@
 
 <input type="text" id="postTitle" placeholder="제목을 입력하세요">
 <div id="classic">
-    <p>공지사항 테스트</p>
+    <p>문의사항 테스트</p>
 </div>
 <input type="file" id="imageInput">
 <button onclick="uploadImage()">Upload Image</button>
@@ -32,7 +32,7 @@
                     const formData = new FormData();
                     formData.append('file', file);
 
-                    fetch('/ntImg', {
+                    fetch('/qnaImg', {
                         method: 'POST',
                         body: formData
                     })
@@ -73,15 +73,15 @@
 
                 // JSON 형식으로 게시글 정보와 파일 데이터 포함
                 const postData = {
-                    noticeTitle: title,
-                    noticeContent: content,
+                    qnaTitle: title,
+                    qnaContent: content,
                     userNumber:1,
                     fileName:file.name,
                     fileData: fileData  // Base64로 인코딩된 파일 데이터
                 };
 
                 // 서버로 JSON 데이터 전송
-                fetch('/notice/upload', {
+                fetch('/qna/upload', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

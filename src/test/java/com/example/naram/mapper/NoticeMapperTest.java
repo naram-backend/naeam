@@ -90,7 +90,6 @@ class NoticeMapperTest {
 
     @Test
     @DisplayName("공지사항 삭제")
-//    @Disabled
     void deleteNotice() {
         noticeMapper.deleteNotice(7L);
     }
