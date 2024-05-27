@@ -1,9 +1,7 @@
 package com.example.naram.mapper;
 
-import com.example.naram.domain.dto.NoticeDto;
 import com.example.naram.domain.dto.QnaDto;
 import com.example.naram.domain.vo.Criteria;
-import com.example.naram.domain.vo.NoticeDetailVo;
 import com.example.naram.domain.vo.QnaDetailVo;
 import com.example.naram.domain.vo.SearchVo;
 import lombok.extern.slf4j.Slf4j;
@@ -37,16 +35,12 @@ class QnaMapperTest {
     @Test
     @DisplayName("전체 문의사항 정보")
     void viewQna() {
-        Criteria criteria = new Criteria();
         SearchVo searchVo = new SearchVo();
-
-        criteria.setAmount(15);
-        criteria.setPage(0);
 
         searchVo.setCate("qnaContent");
         searchVo.setKeyword("te");
 
-        List<QnaDetailVo> list = qnaMapper.viewQna(criteria, searchVo);
+        List<QnaDetailVo> list = qnaMapper.viewQna(searchVo);
         for (QnaDetailVo qnaDetailVo : list) {
             log.info("가져온 공지사항 정보 : {}", qnaDetailVo);
         }

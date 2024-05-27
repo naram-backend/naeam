@@ -14,6 +14,8 @@ public class NoticeDetailVo {
     private String noticeTitle;
     private String noticeContent;
     private String noticeRegisterDate;
+    private String fileName;
+    private String fileUrl;
     private boolean important;
     private boolean hiring;
     private int noticeView;

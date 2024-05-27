@@ -7,11 +7,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @NoArgsConstructor
-public class QnaUploadVo {
+public class UserInfoVo {
     private Long userNumber;
-    private Long qnaNumber;
-    private String qnaTitle;
-    private String qnaContent;
-    private String fileName;
-    private String fileData;
+    private String adminCheck;
 }

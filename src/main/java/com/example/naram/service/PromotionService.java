@@ -2,6 +2,7 @@ package com.example.naram.service;
 
 import com.example.naram.domain.dto.PromotionDto;
 import com.example.naram.domain.dto.PromotionFileDto;
+import com.example.naram.domain.vo.PrDetailVo;
 import com.example.naram.domain.vo.PrUploadVo;
 import com.example.naram.mapper.PromotionMapper;
 import lombok.RequiredArgsConstructor;
@@ -34,4 +35,18 @@ public class PromotionService {
             throw new Exception("게시글 등록 실패");
         }
     }
+
+//    게시글 상세
+    public PrDetailVo prDetail(Long promotionNumber) throws Exception{
+        try{
+            PrDetailVo pr = promotionMapper.prDetail(promotionNumber);
+            return pr;
+        }catch (Exception e){
+            log.error("게시글 등록중 오류 발생 : {}",e.getMessage());
+            e.printStackTrace(); // 예외 스택 트레이스 출력
+            throw new Exception("게시글 불러오기 실패");
+        }
+    }
+
+
 }

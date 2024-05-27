@@ -39,33 +39,36 @@ public class QnaController {
 
     //  공지사항 등록 POST 매핑
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadQna(@RequestBody QnaUploadVo qnaUploadVo){
+    public ResponseEntity<?> uploadQna(@RequestBody QnaUploadVo qn){
+        QnaFileDto qnaFileDto = new QnaFileDto();
 //      파일 디코딩
-        String fileData = qnaUploadVo.getFileData();
-        byte[] decodedBytes = Base64.getDecoder().decode(fileData.substring(fileData.indexOf(",") + 1));
+        try {
+            String fileData = qn.getFileData();
+            byte[] decodedBytes = Base64.getDecoder().decode(fileData.substring(fileData.indexOf(",") + 1));
+            //      파일 클라우드 스토리지에 저장
+            String origin = qn.getFileName();
+            String fileName = UUID.randomUUID().toString() + "-" + origin;
+            String blobName = "qna/file/" + fileName;
+            BlobId blobId = BlobId.of(bucketName, blobName);
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+            Blob blob = storage.create(blobInfo, decodedBytes);
+            String fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + blobName;
 
-//      파일 클라우드 스토리지에 저장
-        String origin = qnaUploadVo.getFileName();
-        String fileName = UUID.randomUUID().toString() + "-" + origin;
-        String blobName = "qna/file/" + fileName;
-        BlobId blobId = BlobId.of(bucketName, blobName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-        Blob blob = storage.create(blobInfo, decodedBytes);
-        String fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + blobName;
+            qnaFileDto.setFileUrl(fileUrl);
+            qnaFileDto.setFileName(origin);
+            log.info("noticeFileDto == {}",qnaFileDto);
+        } catch (NullPointerException e) {
+            qnaFileDto = null;
+        }
 
         QnaDto qnaDto = new QnaDto();
-        qnaDto.setUserNumber(qnaUploadVo.getUserNumber());
-        qnaDto.setQnaTitle(qnaUploadVo.getQnaTitle());
-        qnaDto.setQnaContent(qnaUploadVo.getQnaContent());
+        qnaDto.setUserNumber(qn.getUserNumber());
+        qnaDto.setQnaTitle(qn.getQnaTitle());
+        qnaDto.setQnaContent(qn.getQnaContent());
         log.info("qnaDto == {}",qnaDto);
 
-        QnaFileDto qnaFileDto = new QnaFileDto();
-        qnaFileDto.setFileUrl(fileUrl);
-        qnaFileDto.setFileName(origin);
-        log.info("qnaFileDto == {}",qnaFileDto);
-
         try{
-            qnaService.qnaUpload(qnaDto, qnaFileDto);
+            qnaService.qnaUpload(qnaDto,qnaFileDto);
             return ResponseEntity.ok("{\"message\": \"문의사항 등록 성공!!\"}");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"문의사항 등록 실패\"}");
@@ -74,45 +77,106 @@ public class QnaController {
     }
 
     //  문의사항 리스트 조회 컨트롤러
-    @GetMapping("/list/{page}")
-    public Map<String, Object> viewQna(@PathVariable("page")int page, SearchVo searchVo){
+    @GetMapping("/list")
+    public ResponseEntity<?> viewQna(SearchVo searchVo){
         log.info("===============문의사항 리스트 조회 컨트롤러 실행 !!");
-        Criteria criteria = new Criteria();
-        criteria.setPage(page);
-        criteria.setAmount(15);
-        PageVo pageVo = new PageVo(qnaService.getTotalCount(searchVo), criteria);
-        List<QnaDetailVo> qnaList = qnaService.listQna(criteria, searchVo);
-
-        Map<String, Object> qnaMap = new HashMap<>();
-        qnaMap.put("pageVo", pageVo);
-        qnaMap.put("qnaList", qnaList);
-        log.info("===============문의사항 리스트 조회 컨트롤러 결과 !! {}", qnaList);
-
-        return qnaMap;
+        try {
+            List<QnaDetailVo> qnaList = qnaService.listQna(searchVo);
+            log.info("===============문의사항 상세정보 컨트롤러 결과 !! {}", qnaList);
+            return ResponseEntity.ok(qnaList);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"문의사항 불러오기 실패\"}");
+        }
     }
 
     // 문의사항 상세정보
-    @GetMapping(value={"/qnaDetail","/qnaConfig"})
-    public void selectQnaDetail(@RequestParam(name = "qnaNumber")Long qnaNumber, Model model){
+    @GetMapping("/detail")
+    public ResponseEntity<?> selectQnaDetail(@RequestParam(name = "qnaNumber")Long qnaNumber){
         log.info("===============문의사항 상세정보 컨트롤러 실행 !! {}", qnaNumber);
-        qnaService.updateCount(qnaNumber);
-        QnaDetailVo qnaDetailVo = qnaService.viewDetailQna(qnaNumber);
-        log.info("===============문의사항 상세정보 컨트롤러 결과 !! {}", qnaDetailVo);
-        model.addAttribute("qnaDetail", qnaDetailVo);
+        try {
+            qnaService.updateCount(qnaNumber);
+            QnaDetailVo qnaDetailVo = qnaService.viewDetailQna(qnaNumber);
+            if (qnaDetailVo == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"null 값\"}");
+            }
+            log.info("===============문의사항 상세정보 컨트롤러 결과 !! {}", qnaDetailVo);
+            return ResponseEntity.ok(qnaDetailVo);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"문의사항 불러오기 실패\"}");
+        }
     }
 
     // 문의사항 수정 컨트롤러
     @PostMapping("/qnaConfig")
-    public RedirectView qnaUpdate(@RequestBody QnaDto qnaDto){
-        qnaService.updateQna(qnaDto);
-        return new RedirectView("/list");
+    public ResponseEntity<?> qnaUpdate(@RequestBody QnaUploadVo qn){
+        QnaFileDto qnaFileDto = new QnaFileDto();
+//      파일 디코딩
+        try {
+            String fileData = qn.getFileData();
+            byte[] decodedBytes = Base64.getDecoder().decode(fileData.substring(fileData.indexOf(",") + 1));
+            //      파일 클라우드 스토리지에 저장
+            String origin = qn.getFileName();
+            String fileName = UUID.randomUUID().toString() + "-" + origin;
+            String blobName = "qna/file/" + fileName;
+            BlobId blobId = BlobId.of(bucketName, blobName);
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+            Blob blob = storage.create(blobInfo, decodedBytes);
+            String fileUrl = "https://storage.googleapis.com/" + bucketName + "/" + blobName;
+
+            qnaFileDto.setFileUrl(fileUrl);
+            qnaFileDto.setFileName(origin);
+            qnaFileDto.setQnaNumber(qnaFileDto.getQnaNumber());
+            log.info("try 문에 있는 qnaFileDto == {}",qnaFileDto);
+        } catch (NullPointerException e) {
+            qnaFileDto = null;
+        }
+
+        QnaDto qnaDto = new QnaDto();
+        qnaDto.setUserNumber(qn.getUserNumber());
+        qnaDto.setQnaNumber(qn.getQnaNumber());
+        qnaDto.setQnaTitle(qn.getQnaTitle());
+        qnaDto.setQnaContent(qn.getQnaContent());
+        log.info("try 문에 없는 qnaFileDto == {}",qnaFileDto);
+        log.info("qnaDto == {}",qnaDto);
+
+        try{
+            QnaDetailVo qnaDetailVo = qnaService.updateQna(qnaDto,qnaFileDto);
+            return ResponseEntity.ok(qnaDetailVo);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"문의사항 수정 실패\"}");
+        }
+    }
+    
+    //공지사항 수정
+    @GetMapping("/noticeConfig")
+    public ResponseEntity<?> noticeUpdateView(@RequestParam(name = "qnaNumber")Long qnaNumber) {
+        log.info("===============문의사항 수정 확인 컨트롤러 실행 !! {}", qnaNumber);
+        try {
+            QnaDetailVo qnaDetailVo = qnaService.viewDetailQna(qnaNumber);
+            if (qnaDetailVo == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"null 값\"}");
+            }
+            log.info("===============공지사항 수정 확인 컨트롤러 결과 !! {}", qnaDetailVo);
+            return ResponseEntity.ok(qnaDetailVo);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"공지사항 수정 불러오기 실패\"}");
+        }
     }
 
     // 문의사항 삭제
     @GetMapping("/delete")
-    public RedirectView qnaDelete(@RequestParam Long qnaNumber){
-        qnaService.deleteQna(qnaNumber);
-        return new RedirectView("/list");
+    public ResponseEntity<?> qnaDelete(@RequestParam Long qnaNumber){
+        try {
+            QnaDetailVo qnaDetailVo = qnaService.viewDetailQna(qnaNumber);
+            if (qnaNumber == null) {
+                throw new IllegalArgumentException("삭제할 문의사항이 존재하지 않습니다.");
+            }
+            qnaService.deleteQna(qnaNumber);
+            log.info("===============문의사항 삭제 완료 !!");
+            return ResponseEntity.ok("{\"message\": \"문의사항 삭제 완료\"}");
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"문의사항 삭제 실패\"}");
+        }
     }
 
 }

@@ -3,7 +3,6 @@
 
 <configuration>
         <typeAliases>
-
                 <!--     dto     -->
                 <typeAlias type="com.example.naram.domain.dto.NoticeDto" alias="noticeDto"/>
                 <typeAlias type="com.example.naram.domain.dto.NoticeFileDto" alias="noticeFileDto"/>
@@ -29,5 +28,8 @@
                 <typeAlias type="com.example.naram.domain.vo.UserJoinRequestVo" alias="userJoinRequestVo"/>
                 <typeAlias type="com.example.naram.domain.vo.UserLoginVo" alias="userLoginVo"/>
                 <typeAlias type="com.example.naram.domain.vo.VerificationVo" alias="verificationVo"/>
+                <typeAlias type="com.example.naram.domain.vo.Criteria" alias="criteria"/>
+                <typeAlias type="com.example.naram.domain.vo.PrDetailVo" alias="prDetailVo"/>
+                <typeAlias type="com.example.naram.domain.vo.UserInfoVo" alias="userInfoVo"/>
         </typeAliases>
 </configuration>

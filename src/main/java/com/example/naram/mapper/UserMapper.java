@@ -4,14 +4,20 @@ import com.example.naram.domain.dto.UserAddDto;
 import com.example.naram.domain.dto.UserDto;
 import com.example.naram.domain.vo.CheckPwVo;
 import com.example.naram.domain.vo.MyPageVo;
+import com.example.naram.domain.vo.UserInfoVo;
 import com.example.naram.domain.vo.UserLoginVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Optional;
 
 @Mapper
 public interface UserMapper {
 //  로그인
     public UserLoginVo login(@Param("userId")String userId, @Param("userPassword")String userPassword);
+    UserLoginVo findByUsername(String username);
+//
+    UserInfoVo userInfo(String userId);
 //  아이디찾기
     public String findId(@Param("userEmail")String userEmail, @Param("userName")String userName);
 //  비밀번호 찾기

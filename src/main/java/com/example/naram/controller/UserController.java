@@ -9,8 +9,12 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -22,23 +26,20 @@ public class UserController {
     private final UserService userService;
     private final MailService mailService;
 
-    //  로그인
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDto rq){
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-        String userId = rq.getUserId();
-        String userPassword = rq.getUserPassword();
-        log.info(userId);
-        log.info(userPassword);
-
+    //
+    @GetMapping("/info")
+    public ResponseEntity<?> userInfo(){
         try {
-            UserLoginVo userLoginVo = userService.login(userId, userPassword);
-            log.info("로그인 성공====================== userDto{}",userLoginVo);
-            log.info("로그인 정보 =====================  userLoginVo{}",userLoginVo);
-            return ResponseEntity.ok(userLoginVo);
-        } catch (Exception e) {
-            log.info("로그인 실패 로그======================");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \" 로그인 실패 \"}");
+            String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+            log.info("userId : {}",userId);
+            UserInfoVo userInfoVo = userService.userInfo(userId);
+            log.info("userInfoVo : {}",userInfoVo);
+            return ResponseEntity.ok(userInfoVo);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \" 아이디를 찾을 수 없습니다. \"}");
         }
     }
     
@@ -186,12 +187,12 @@ public class UserController {
     public ResponseEntity<?> userJoin(@RequestBody UserJoinRequestVo rq){
         UserDto user = new UserDto();
         user.setUserId(rq.getUserId());
-        user.setUserPassword(rq.getUserPassword());
+        user.setUserPassword(bCryptPasswordEncoder.encode(rq.getUserPassword()) );
         user.setUserName(rq.getUserName());
         user.setUserEmail(rq.getUserEmail());
         user.setUserBirth(rq.getUserBirth());
         user.setUserCalendar(rq.isUserCalendar());
-        user.setAdminCheck(false);
+        user.setAdminCheck("ROLE_USER");
         log.info("컨트롤러 userDto : {}",user);
 
         UserAddDto add = new UserAddDto();
@@ -214,9 +215,10 @@ public class UserController {
     }
 
 //    마이페이지
-    @PostMapping("/myPage")
-    public ResponseEntity<?> myPage(@RequestBody UserDto rq){
-        Long userNumber = rq.getUserNumber();
+    @GetMapping("/myPage")
+    public ResponseEntity<?> myPage(){
+        Long userNumber = ((UserLoginVo) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserNumber();
+
         log.info("userNumber : {}",userNumber);
         try{
             log.info("===================");

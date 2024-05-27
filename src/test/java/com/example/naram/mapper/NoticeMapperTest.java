@@ -37,16 +37,12 @@ class NoticeMapperTest {
     @DisplayName("전체 공지사항 정보")
 //    @Disabled
     void viewNotice() {
-        Criteria criteria = new Criteria();
         SearchVo searchVo = new SearchVo();
-
-        criteria.setAmount(15);
-        criteria.setPage(0);
         
         searchVo.setCate("noticeUser");
         searchVo.setKeyword("관");
 
-        List<NoticeDetailVo> list = noticeMapper.viewNotice(criteria, searchVo);
+        List<NoticeDetailVo> list = noticeMapper.viewNotice(searchVo);
         for (NoticeDetailVo noticeDetailVo : list) {
             log.info("가져온 공지사항 정보 : {}", noticeDetailVo);
         }

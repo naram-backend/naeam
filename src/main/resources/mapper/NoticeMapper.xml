@@ -36,14 +36,16 @@
             </choose>
         </where>
         ORDER BY NOTICE_NUMBER DESC
-        LIMIT #{criteria.amount} OFFSET #{criteria.page}
     </select>
 
     <!-- 공지사항 상세정보 -->
     <select id="viewDetailNotice" parameterType="Long" resultType="NoticeDetailVo">
-        SELECT n.NOTICE_NUMBER, n.USER_NUMBER, n.NOTICE_TITLE, NOTICE_CONTENT, DATE_FORMAT(NOTICE_REGISTER_DATE, '%Y-%m-%d') AS NOTICE_REGISTER_DATE, n.IMPORTANT, n.HIRING, n.NOTICE_VIEW, u.USER_NAME
-        FROM notice n join users u on n.USER_NUMBER = u.USER_NUMBER
-        WHERE NOTICE_NUMBER = #{noticeNumber}
+        SELECT n.NOTICE_NUMBER, n.USER_NUMBER, n.NOTICE_TITLE, n.NOTICE_CONTENT, DATE_FORMAT(NOTICE_REGISTER_DATE, '%Y-%m-%d') AS NOTICE_REGISTER_DATE,
+               n.IMPORTANT, n.HIRING, n.NOTICE_VIEW, u.USER_NAME, nf.file_name, nf.file_url
+        FROM notice n
+            join users u on n.USER_NUMBER = u.USER_NUMBER
+            join notice_file nf on n.notice_number = nf.notice_number
+        WHERE n.NOTICE_NUMBER = #{noticeNumber}
     </select>
 
     <!-- 검색별 글 수 -->
@@ -75,6 +77,15 @@
             SET
                 notice_title = #{noticeTitle},
                 notice_content = #{noticeContent}
+        WHERE notice_number = #{noticeNumber}
+    </update>
+
+    <!-- 공지사항 파일 수정하기 -->
+    <update id="updateFileNotice" parameterType="NoticeFileDto">
+        UPDATE notice_file
+        SET
+            file_url = #{fileUrl},
+            file_name = #{fileName}
         WHERE notice_number = #{noticeNumber}
     </update>
 

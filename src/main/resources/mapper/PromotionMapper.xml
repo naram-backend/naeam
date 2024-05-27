@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.naram.mapper.PromotionMapper">
+<!-- 홍보게시물 작성 -->
     <insert id="prUpload" parameterType="promotionDto">
         insert into promotion (user_number, promotion_title, promotion_content, promotion_view,promotion_register_date)
         values (#{userNumber},#{promotionTitle},#{promotionContent},0,NOW())
@@ -9,4 +10,13 @@
         insert into promotion_file ( promotion_number, file_url, file_name)
         values (LAST_INSERT_ID(),#{fileUrl},#{fileName})
     </insert>
+
+<!-- 홍보게시물 상세 -->
+    <select id="prDetail" resultType="prDetailVo">
+        select promotion_title,promotion_content,promotion_view,promotion_register_date,file_name,file_url,user_name
+        from promotion p
+                 join promotion_file pf on p.promotion_number = pf.promotion_number
+                 join users u on u.user_number=p.user_number
+        where p.promotion_number=#{promotionNumber}
+    </select>
 </mapper>

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.naram.mapper.UserMapper">
+
+<!-- 로그인 -->
+    <select id="findByUsername" parameterType="String" resultType="userLoginVo">
+        select * from users WHERE user_id = #{username}
+    </select>
+<!-- 프론트단에서 사용할 정보 -->
+    <select id="userInfo" parameterType="String" resultType="userInfoVo">
+        select user_number, admin_check from users where user_id = #{userId}
+    </select>
+
 <!-- 로그인 -->
     <select id="login" resultType="userLoginVo">
         select u.user_number as user_number, user_id,user_name,admin_check,user_email,a.nickname from users u
