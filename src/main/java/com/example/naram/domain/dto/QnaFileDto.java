@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class QnaFileDto {
     private Long qnaFileNumber;
     private Long qnaNumber;
-    private String qnaUrl;
-    private String qnaDate;
+    private String fileUrl;
+    private String fileName;
 }

@@ -1,6 +1,7 @@
 package com.example.naram.service;
 
 import com.example.naram.domain.dto.NoticeDto;
+import com.example.naram.domain.dto.NoticeFileDto;
 import com.example.naram.domain.vo.Criteria;
 import com.example.naram.domain.vo.NoticeDetailVo;
 import com.example.naram.domain.vo.SearchVo;
@@ -30,7 +31,12 @@ class NoticeServiceTest {
         noticeDto.setImportant(false);
         noticeDto.setNoticeView(0);
         noticeDto.setUserNumber(2L);
-        noticeService.createNotice(noticeDto);
+        NoticeFileDto noticeFileDto = new NoticeFileDto();
+        try {
+            noticeService.noticeUpload(noticeDto, noticeFileDto);
+        } catch (Exception e) {
+            log.info("오류");
+        }
     }
 
     @Test

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.naram.mapper.QnaMapper">
+
+    <!-- 공지사항 작성 -->
+    <insert id="createQna" parameterType="QnaDto">
+        INSERT INTO qna ( user_number, qna_title, qna_content, qna_register_date, qna_private, qna_answer, qna_view )
+        VALUES (#{userNumber}, #{qnaTitle}, #{qnaContent}, NOW(), #{qnaPrivate}, #{qnaAnswer}, #{qnaView})
+        <selectKey keyProperty="qnaNumber" resultType="Long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <!-- 전체 문의사항 목록 -->
+    <select id="viewQna" resultType="QnaDetailVo">
+        SELECT q.QNA_NUMBER, q.USER_NUMBER, q.QNA_TITLE, q.QNA_CONTENT, DATE_FORMAT(QNA_REGISTER_DATE, '%Y-%m-%d') AS QNA_REGISTER_DATE, q.QNA_PRIVATE, q.QNA_ANSWER, q.QNA_VIEW,
+        u.user_name
+        FROM qna q join users u on q.user_number = u.user_number
+        <where>
+            <choose>
+                <when test="searchVo.cate == 'qnaTitle'">
+                    q.QNA_TITLE LIKE CONCAT('%', #{searchVo.keyword}, '%')
+                </when>
+                <when test="searchVo.cate == 'qnaContent'">
+                    q.QNA_CONTENT LIKE CONCAT('%', #{searchVo.keyword}, '%')
+                </when>
+                <when test="searchVo.cate == 'qnaUser'">
+                    u.USER_NAME LIKE CONCAT('%', #{searchVo.keyword}, '%')
+                </when>
+            </choose>
+        </where>
+        ORDER BY QNA_NUMBER DESC
+        LIMIT #{criteria.amount} OFFSET #{criteria.page}
+    </select>
+
+    <!-- 검색별 글 수 -->
+    <select id="getTotalQna" resultType="_int">
+        SELECT count(QNA_NUMBER)
+        FROM qna q join users u on q.user_number = u.user_number
+        <if test="searchVo.cate == 'qnaTitle'">
+            WHERE q.QNA_TITLE LIKE CONCAT('%', #{searchVo.keyword}, '%')
+        </if>
+        <if test="searchVo.cate == 'qnaContent'">
+            WHERE q.QNA_CONTENT LIKE CONCAT('%', #{searchVo.keyword}, '%')
+        </if>
+        <if test="searchVo.cate == 'qnaUser'">
+            WHERE u.USER_NAME LIKE CONCAT('%', #{searchVo.keyword}, '%')
+        </if>
+    </select>
+
+    <!-- 문의사항 조회수 -->
+    <update id="qnaCount"  parameterType="Long">
+        UPDATE qna
+        SET
+            qna_view = qna_view + 1
+        WHERE qna_number = #{qnaNumber}
+    </update>
+
+    <!-- 문의사항 파일 업로드 -->
+    <insert id="uploadFileQna" parameterType="qnaFileDto">
+        insert into qna_file ( qna_number, file_url, file_name)
+        values (LAST_INSERT_ID(),#{fileUrl},#{fileName})
+    </insert>
+
+    <!-- 문의사항 상세정보 -->
+    <select id="viewDetailQna" parameterType="Long" resultType="QnaDetailVo">
+        SELECT q.QNA_NUMBER, q.USER_NUMBER, q.QNA_TITLE, q.QNA_CONTENT, DATE_FORMAT(QNA_REGISTER_DATE, '%Y-%m-%d') AS QNA_REGISTER_DATE, q.QNA_PRIVATE, q.QNA_ANSWER, q.QNA_VIEW, u.USER_NAME
+        FROM qna q join users u on q.USER_NUMBER = u.USER_NUMBER
+        WHERE QNA_NUMBER = #{qnaNumber}
+    </select>
+
+    <!-- 문의사항 수정하기 -->
+    <update id="updateQna" parameterType="QnaDto">
+        UPDATE qna
+        SET
+            qna_title = #{qnaTitle},
+            qna_content = #{qnaContent}
+        WHERE qna_number = #{qnaNumber}
+    </update>
+
+    <!-- 문의사항 삭제하기 -->
+    <delete id="deleteQna">
+        DELETE FROM qna
+        WHERE qna_number = #{qnaNumber}
+    </delete>
+
+</mapper>

@@ -20,7 +20,9 @@
                 <typeAlias type="com.example.naram.domain.vo.Criteria" alias="criteria"/>
                 <typeAlias type="com.example.naram.domain.vo.MyPageVo" alias="myPageVo"/>
                 <typeAlias type="com.example.naram.domain.vo.NoticeDetailVo" alias="noticeDetailVo"/>
+                <typeAlias type="com.example.naram.domain.vo.QnaDetailVo" alias="qnaDetailVo"/>
                 <typeAlias type="com.example.naram.domain.vo.NtUploadVo" alias="ntUploadVo"/>
+                <typeAlias type="com.example.naram.domain.vo.QnaUploadVo" alias="qnaUploadVo"/>
                 <typeAlias type="com.example.naram.domain.vo.PageVo" alias="pageVo"/>
                 <typeAlias type="com.example.naram.domain.vo.PrUploadVo" alias="prUploadVo"/>
                 <typeAlias type="com.example.naram.domain.vo.SearchVo" alias="searchVo"/>

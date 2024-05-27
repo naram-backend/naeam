@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Home</title>
+</head>
+<body>
+<h3>Classic editor</h3>
+
+<input type="text" id="postTitle" placeholder="제목을 입력하세요">
+<div id="classic">
+    <p>문의사항 테스트</p>
+</div>
+<input type="file" id="imageInput">
+<button onclick="uploadImage()">Upload Image</button>
+<input type="file" id="fileUpload"><br>
+<button id="uploadPostBtn">게시글 등록</button>
+<script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
+<script>
+    // window.onload를 사용하여 DOM이 로드되면 실행되도록 함
+    window.onload = function() {
+        ClassicEditor
+            .create( document.querySelector( '#classic' ) )
+            .then( editor => {
+                console.log('Editor was initialized');
+
+                function uploadImage() {
+                    const fileInput = document.getElementById('imageInput');
+                    const file = fileInput.files[0];
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    fetch('/qnaImg', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.text())
+                        .then(url => {
+                            console.log('Image uploaded:', url);
+                            const imageElement = '<img src="' + url + '" alt="Uploaded Image">';
+                            editor.setData(editor.getData() + imageElement);
+                        })
+                        .catch(error => {
+                            console.error('Error uploading image:', error);
+                        });
+                }
+
+                window.uploadImage = uploadImage;
+
+                document.getElementById('uploadPostBtn').addEventListener('click', function() {
+                    uploadPost(editor);
+                });
+            })
+            .catch( error => {
+                console.error( error );
+            } );
+
+        function uploadPost(editor) {
+            const title = document.getElementById('postTitle').value;
+            const content = editor.getData();
+
+            // 파일 업로드를 위한 input 요소 가져오기
+            const fileInput = document.getElementById('fileUpload');
+            // 선택한 파일 가져오기
+            const file = fileInput.files[0];
+
+            // 파일을 Base64로 인코딩
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const fileData = reader.result;
+
+                // JSON 형식으로 게시글 정보와 파일 데이터 포함
+                const postData = {
+                    qnaTitle: title,
+                    qnaContent: content,
+                    userNumber:1,
+                    fileName:file.name,
+                    fileData: fileData  // Base64로 인코딩된 파일 데이터
+                };
+
+                // 서버로 JSON 데이터 전송
+                fetch('/qna/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Post uploaded:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error uploading post:', error);
+                    });
+            };
+
+            // 파일을 읽어 Base64로 인코딩
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+</body>
+</html>

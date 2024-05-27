@@ -12,7 +12,6 @@ import java.util.List;
 
 /**
  * 공지사항 Mapper
- * 24.04.04
  * 홍재헌
  */
 @Mapper
